@@ -569,6 +569,13 @@ func (app *BaseApp) getState(mode runTxMode) *state {
 	}
 }
 
+// Returns the application's deliverState if app is in runTxModeDeliver,
+// prepareProposalState if app is in runTxPrepareProposal, processProposalState
+// if app is in runTxProcessProposal, and checkState otherwise.
+func (app *BaseApp) GetAppState(mode runTxMode) sdk.Context {
+	return app.getState(mode).Context()
+}
+
 func (app *BaseApp) getBlockGasMeter(ctx sdk.Context) storetypes.GasMeter {
 	if maxGas := app.GetMaximumBlockGas(ctx); maxGas > 0 {
 		return storetypes.NewGasMeter(maxGas)
