@@ -217,6 +217,7 @@ func (app *BaseApp) EndBlock(req abci.RequestEndBlock) (res abci.ResponseEndBloc
 
 	if app.endBlocker != nil {
 		res = app.endBlocker(app.deliverState.ctx, req)
+		fmt.Println(res.Events.app.indexEvents)
 		res.Events = sdk.MarkEventsToIndex(res.Events, app.indexEvents)
 	}
 
