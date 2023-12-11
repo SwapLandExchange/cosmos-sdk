@@ -572,23 +572,15 @@ func (m *Manager) BeginBlock(ctx sdk.Context, req abci.RequestBeginBlock) abci.R
 // child context with an event manager to aggregate events emitted from all
 // modules.
 func (m *Manager) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock {
-	fmt.Println("running contex")
 	ctx = ctx.WithEventManager(sdk.NewEventManager())
 	validatorUpdates := []abci.ValidatorUpdate{}
-	fmt.Println("contex", ctx)
-	fmt.Println(m.OrderEndBlockers)
 	for _, moduleName := range m.OrderEndBlockers {
-		fmt.Println(moduleName)
 		module, ok := m.Modules[moduleName].(EndBlockAppModule)
 		if !ok {
 			continue
 		}
-		fmt.Println(module, ok)
 		moduleValUpdates := module.EndBlock(ctx, req)
 
-		fmt.Println(moduleValUpdates)
-		fmt.Println(len(moduleValUpdates))
-		fmt.Println(len(validatorUpdates))
 		// use these validator updates if provided, the module manager assumes
 		// only one module will update the validator set
 		if len(moduleValUpdates) > 0 {
@@ -599,8 +591,6 @@ func (m *Manager) EndBlock(ctx sdk.Context, req abci.RequestEndBlock) abci.Respo
 			validatorUpdates = moduleValUpdates
 		}
 	}
-	fmt.Println(validatorUpdates)
-	fmt.Println(ctx.EventManager().ABCIEvents())
 
 	return abci.ResponseEndBlock{
 		ValidatorUpdates: validatorUpdates,

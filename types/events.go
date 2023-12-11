@@ -310,12 +310,10 @@ func MarkEventsToIndex(events []abci.Event, indexSet map[string]struct{}) []abci
 	updatedEvents := make([]abci.Event, len(events))
 
 	for i, e := range events {
-		fmt.Println(e.Type)
 		updatedEvent := abci.Event{
 			Type:       e.Type,
 			Attributes: make([]abci.EventAttribute, len(e.Attributes)),
 		}
-		fmt.Println(e.Attributes)
 
 		for j, attr := range e.Attributes {
 			_, index := indexSet[fmt.Sprintf("%s.%s", e.Type, attr.Key)]
